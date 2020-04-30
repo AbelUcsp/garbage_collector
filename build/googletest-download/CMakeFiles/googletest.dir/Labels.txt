@@ -1,0 +1,14 @@
+# Target labels
+ googletest
+# Source files and their labels
+/home/abel/Escritorio/git/garbage_collector/build/googletest-download/CMakeFiles/googletest
+/home/abel/Escritorio/git/garbage_collector/build/googletest-download/CMakeFiles/googletest.rule
+/home/abel/Escritorio/git/garbage_collector/build/googletest-download/CMakeFiles/googletest-complete.rule
+/home/abel/Escritorio/git/garbage_collector/build/googletest-download/googletest-prefix/src/googletest-stamp/googletest-install.rule
+/home/abel/Escritorio/git/garbage_collector/build/googletest-download/googletest-prefix/src/googletest-stamp/googletest-mkdir.rule
+/home/abel/Escritorio/git/garbage_collector/build/googletest-download/googletest-prefix/src/googletest-stamp/googletest-download.rule
+/home/abel/Escritorio/git/garbage_collector/build/googletest-download/googletest-prefix/src/googletest-stamp/googletest-update.rule
+/home/abel/Escritorio/git/garbage_collector/build/googletest-download/googletest-prefix/src/googletest-stamp/googletest-patch.rule
+/home/abel/Escritorio/git/garbage_collector/build/googletest-download/googletest-prefix/src/googletest-stamp/googletest-configure.rule
+/home/abel/Escritorio/git/garbage_collector/build/googletest-download/googletest-prefix/src/googletest-stamp/googletest-build.rule
+/home/abel/Escritorio/git/garbage_collector/build/googletest-download/googletest-prefix/src/googletest-stamp/googletest-test.rule

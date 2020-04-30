@@ -8,10 +8,13 @@
  * Permite que varios SmartPointers puedan acceder al mismo recurso compartido.
  * Cuando el ˙ltimo puntero es eliminado, se elimina y libera el recurso.
  */
+
 template <typename Type>
 class SmartPointer {
  private:
-  Type *resource_;
+    Type *resource_;
+ public:
+    int *counter;
 
  public:
   /* Constructor: SmartPointer(Type* resource=NULL)
@@ -23,9 +26,30 @@ class SmartPointer {
    * El recurso también podría ser NULL lo que ocasionaría que el
    * recurso no administre ningún recurso.
    */
-  explicit SmartPointer(Type *resource) :resource_(resource) {
-  }
 
+  //SmartPointer() :resource_(nullptr), counter(nullptr) {}
+
+/*
+  explicit SmartPointer(Type *resource=nullptr) :resource_(resource), counter(nullptr) {
+      if(resource){
+          counter = new int(1);
+      }
+  }*/
+
+explicit SmartPointer(Type *resource=nullptr) {
+      if(this->counter != nullptr){
+          if( *this->counter ==1 ){
+            //(*this->counter)--; 
+            delete resource;
+         }
+      }
+      
+      resource_ = resource;
+      counter = nullptr;
+      if(resource){
+          counter = new int(1);
+      }
+  }
   /* Destructor: ~SmartPointer();
    * Uso: (implícito)
    * ------------------------------------------------------------
@@ -33,7 +57,16 @@ class SmartPointer {
    * y liberando la memoria si fuera el último SmartPointer apuntando
    * al recurso.
    */
-  ~SmartPointer() {
+  ~SmartPointer() {///regla 3
+    if( (*counter)>1 ){
+        (*counter)--;
+        return;
+    }
+    else if( (*counter)== 1 ){
+        delete counter;
+        delete resource_;
+    }
+
   }
 
   /* SmartPointer operadores de "des-referencia"(dereference)
@@ -42,8 +75,8 @@ class SmartPointer {
    * ------------------------------------------------------------
    * Permite al SmartPointer comportarse como si fuera un puntero.
    */
-  Type &operator*() const { return Type(0); }
-  Type *operator->() const { return nullptr; }
+  Type &operator*() const { return *resource_; }
+  Type *operator->() const { return resource_; }
 
   /* Funciones de copia
    * Uso: SmartPointer<string> ptr=existingPointer;
@@ -53,28 +86,66 @@ class SmartPointer {
    * SmartPointer. Si el conteo llega a cero, debe ser eliminado
    * (deallocated).
    */
-  SmartPointer &operator=(const SmartPointer &other) {
+  SmartPointer &operator=( const SmartPointer &other) {///regla 3
+    if( *this->counter >= 2){
+        (*this->counter)--; 
+    }
+    else if ( *this->counter == 1){
+        delete this->resource_;
+    }
+    this->counter = other.counter;
+    this->resource_ = other.resource_;
+    (*this->counter)++; 
     return *this;
-  }
-  SmartPointer &operator=(Type *other) {
-    return *this;
-  }
-  SmartPointer(const SmartPointer &other) {
   }
 
+  SmartPointer &operator=(Type *other) {
+     
+      if((*this->counter) == 1){
+            delete counter ;
+            delete resource_ ;
+        } 
+
+      if(other == nullptr)
+        delete resource_;
+
+      if(this->resource_ != nullptr){
+         (*this->counter)--; 
+         this->resource_ = nullptr ; 
+      }
+      
+
+      /*
+    Type *return_ = new Type;
+    *return_ = *other;
+    *this->resource_ = *return_;
+    //cout << "this-> "<<resource_ << endl;
+    */
+    return *this;
+  }
+
+
+  SmartPointer( const SmartPointer &other )  :resource_(other.resource_), counter(other.counter) {/// regla 3
+    //this->resource_ = other.resource_; 
+    //this->counter = other.counter;
+      if( (*this->counter) > 0 ){
+          (*this->counter)++;
+      }
+      
+  }
   /* Helper Function: Obtener recurso.
    * Uso: Type* p=GetPointer();
    * ------------------------------------------------------------
    * Retorna una variable puntero al recurso administrado.
    */
-  Type *GetPointer() const { return nullptr; }
+  Type *GetPointer() const { return resource_; }
 
   /* Helper Function: Obtiene conteo
    * Uso: if (ptr.GetReferenceCount()==1) // Única referencia
    * ------------------------------------------------------------
    * Retorna el número de referencias apuntando al recurso.
    */
-  size_t GetReferenceCount() const { return 0; }
+  size_t GetReferenceCount() const { return *counter; }
 
   /* Helper Function: se des-asocia del recurso;
    * Uso: ptr.Detach();
@@ -82,8 +153,22 @@ class SmartPointer {
    * Deja de administrar un recurso. eliminando y liberando la
    * memoria si es necesario.
    */
-  void Detach() {
+  void Detach() { 
+    if( (*this->counter) == 1){
+        *counter = 0;
+        delete resource_;
+        delete counter;
+    }
+    else if( *this->counter >= 2){
+        (*this->counter)--;
+        Type *return_ = new Type;
+        this->resource_ = return_;
+
+    }
+
   }
+
 };
+
 
 #endif  // SOURCE_SMART_POINTER_SMART_POINTER_HPP_
